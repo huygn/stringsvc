@@ -15,6 +15,10 @@ type Service interface {
 
 type stringService struct{}
 
+func NewStringService() Service {
+	return stringService{}
+}
+
 func (stringService) Uppercase(ctx context.Context, s string) (string, error) {
 	if s == "" {
 		return "", ErrEmpty

@@ -2,48 +2,31 @@ package stringsvc
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
-	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
+
+	httptransport "github.com/go-kit/kit/transport/http"
 )
 
 // MakeHTTPHandler mounts all of the service endpoints into an http.Handler.
-func MakeHTTPHandler(ctx context.Context, s Service) {
-	// r := mux.NewRouter()
+func MakeHTTPHandler(ctx context.Context, s Service) http.Handler {
+	r := mux.NewRouter()
 
-	// r.Methods("POST").Path("/uppercase").Handler(httptransport.NewServer(
-	// 	ctx,
-	// 	MakeUppercaseEndpoint(s),
-	// 	decodeUppercaseRequest,
-	// 	encodeResponse,
-	// ))
-	// r.Methods("POST").Path("/count").Handler(httptransport.NewServer(
-	// 	ctx,
-	// 	MakeCountEndpoint(s),
-	// 	decodeCountRequest,
-	// 	encodeResponse,
-	// ))
-	// return r
-
-	uppercaseHandler := httptransport.NewServer(
+	r.Methods("POST").Path("/uppercase").Handler(httptransport.NewServer(
 		ctx,
 		MakeUppercaseEndpoint(s),
 		decodeUppercaseRequest,
 		encodeResponse,
-	)
-
-	countHandler := httptransport.NewServer(
+	))
+	r.Methods("POST").Path("/count").Handler(httptransport.NewServer(
 		ctx,
 		MakeCountEndpoint(s),
 		decodeCountRequest,
 		encodeResponse,
-	)
-
-	http.Handle("/uppercase", uppercaseHandler)
-	http.Handle("/count", countHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	))
+	return r
 }
 
 func decodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
