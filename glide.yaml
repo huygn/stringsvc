@@ -1,0 +1,9 @@
+package: github.com/gnhuy91/stringsvc
+import:
+- package: github.com/go-kit/kit
+  subpackages:
+  - endpoint
+  - transport/http
+- package: golang.org/x/net
+  subpackages:
+  - context
