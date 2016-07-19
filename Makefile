@@ -15,7 +15,7 @@ build:
 	$(DCR) go-build
 
 _run:
-	bin/stringsvc
+	cmd/stringsvc/bin/stringsvc
 
 run: build _run
 

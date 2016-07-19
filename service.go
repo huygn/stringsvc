@@ -1,26 +1,28 @@
-package main
+package stringsvc
 
 import (
 	"errors"
 	"strings"
+
+	"golang.org/x/net/context"
 )
 
-// StringService provide operations on string.
-type StringService interface {
-	Uppercase(string) (string, error)
-	Count(string) int
+// Service provide operations on string.
+type Service interface {
+	Uppercase(context.Context, string) (string, error)
+	Count(context.Context, string) int
 }
 
 type stringService struct{}
 
-func (stringService) Uppercase(s string) (string, error) {
+func (stringService) Uppercase(ctx context.Context, s string) (string, error) {
 	if s == "" {
 		return "", ErrEmpty
 	}
 	return strings.ToUpper(s), nil
 }
 
-func (stringService) Count(s string) int {
+func (stringService) Count(ctx context.Context, s string) int {
 	return len(s)
 }
 
