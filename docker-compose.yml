@@ -13,7 +13,7 @@ services:
 
   go-build:
     <<: *go
-    command: sh -c 'rm -f bin/* && go build -o bin/stringsvc'
+    command: sh -c 'rm -f bin/* && cd cmd/stringsvc && go build -o bin/stringsvc && chmod 777 bin/stringsvc'
     links: []
     environment:
       CGO_ENABLED: 0
