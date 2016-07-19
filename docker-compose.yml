@@ -1,0 +1,19 @@
+version: '2'
+services:
+
+  go: &go
+    image: golang
+    working_dir: /go/src/github.com/gnhuy91/stringsvc
+    volumes:
+      - .:/go/src/github.com/gnhuy91/stringsvc
+
+  go-test:
+    <<: *go
+    command: go test -v
+
+  go-build:
+    <<: *go
+    command: sh -c 'rm -f bin/* && go build -o bin/stringsvc'
+    links: []
+    environment:
+      CGO_ENABLED: 0
