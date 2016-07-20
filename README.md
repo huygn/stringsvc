@@ -2,7 +2,7 @@
 An implementation of go-kit's stringsvc example, with clearer package separation.
 
 ## Get started
-All steps below requires `docker` and `docker-compose` installed, preferred on a Linux machine.
+All steps below requires `docker` and `docker-compose` installed, preferred on a Mac/Linux machine.
 
 - Test
 
