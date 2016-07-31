@@ -9,7 +9,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func TestStringUppercase(t *testing.T) {
+func TestHandlerUppercase(t *testing.T) {
 	const (
 		url    = "/uppercase"
 		method = "POST"
@@ -38,7 +38,7 @@ func TestStringUppercase(t *testing.T) {
 	}
 }
 
-func TestStringCount(t *testing.T) {
+func TestHandlerCount(t *testing.T) {
 	const (
 		url    = "/count"
 		method = "POST"
