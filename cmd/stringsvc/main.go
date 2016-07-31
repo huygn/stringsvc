@@ -26,6 +26,6 @@ func main() {
 		svc = stringsvc.LoggingMiddleware(logger)(svc)
 	}
 
-	h := stringsvc.MakeHTTPHandler(ctx, svc)
+	h := stringsvc.MakeHTTPHandler(ctx, svc, logger)
 	logger.Log("exit", http.ListenAndServe(":8080", h))
 }

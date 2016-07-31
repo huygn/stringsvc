@@ -7,24 +7,30 @@ import (
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
 
+	"github.com/go-kit/kit/log"
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
 // MakeHTTPHandler mounts all of the service endpoints into an http.Handler.
-func MakeHTTPHandler(ctx context.Context, s Service) http.Handler {
+func MakeHTTPHandler(ctx context.Context, s Service, logger log.Logger) http.Handler {
 	r := mux.NewRouter()
+	options := []httptransport.ServerOption{
+		httptransport.ServerErrorLogger(logger),
+	}
 
 	r.Methods("POST").Path("/uppercase").Handler(httptransport.NewServer(
 		ctx,
 		MakeUppercaseEndpoint(s),
 		decodeUppercaseRequest,
 		encodeResponse,
+		options...,
 	))
 	r.Methods("POST").Path("/count").Handler(httptransport.NewServer(
 		ctx,
 		MakeCountEndpoint(s),
 		decodeCountRequest,
 		encodeResponse,
+		options...,
 	))
 	return r
 }
