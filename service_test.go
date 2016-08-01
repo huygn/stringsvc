@@ -20,7 +20,7 @@ func TestUppercase(t *testing.T) {
 		t.Errorf(err.Error())
 	}
 	if s != outp {
-		t.Errorf("input: %s, want %s, got %s", inp, outp, s)
+		t.Errorf("input: %q, want %q, got %q", inp, outp, s)
 	}
 }
 
@@ -34,7 +34,7 @@ func TestUppercase_FailIfInputNil(t *testing.T) {
 
 	_, err := svc.Uppercase(ctx, inp)
 	if err != ErrEmpty {
-		t.Errorf("input: %s, want %s, got %s", inp, ErrEmpty.Error(), err.Error())
+		t.Errorf("input: %q, want %q, got %q", inp, ErrEmpty.Error(), err.Error())
 	}
 }
 
@@ -49,6 +49,6 @@ func TestCount(t *testing.T) {
 
 	n := svc.Count(ctx, inp)
 	if n != outp {
-		t.Errorf("input: %s, want %v, got %v", inp, outp, n)
+		t.Errorf("input: %q, want %v, got %v", inp, outp, n)
 	}
 }
