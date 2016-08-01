@@ -1,7 +1,9 @@
-package stringsvc
+package stringsvc_test
 
 import (
 	"testing"
+
+	"github.com/gnhuy91/stringsvc"
 
 	"golang.org/x/net/context"
 )
@@ -13,7 +15,7 @@ func TestUppercase(t *testing.T) {
 	)
 
 	ctx := context.Background()
-	svc := NewStringService()
+	svc := stringsvc.NewStringService()
 
 	s, err := svc.Uppercase(ctx, inp)
 	if err != nil {
@@ -30,11 +32,11 @@ func TestUppercase_FailIfInputNil(t *testing.T) {
 	)
 
 	ctx := context.Background()
-	svc := NewStringService()
+	svc := stringsvc.NewStringService()
 
 	_, err := svc.Uppercase(ctx, inp)
-	if err != ErrEmpty {
-		t.Errorf("input: %q, want %q, got %q", inp, ErrEmpty.Error(), err.Error())
+	if err != stringsvc.ErrEmpty {
+		t.Errorf("input: %q, want %q, got %q", inp, stringsvc.ErrEmpty.Error(), err.Error())
 	}
 }
 
@@ -45,7 +47,7 @@ func TestCount(t *testing.T) {
 	)
 
 	ctx := context.Background()
-	svc := NewStringService()
+	svc := stringsvc.NewStringService()
 
 	n := svc.Count(ctx, inp)
 	if n != outp {

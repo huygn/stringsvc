@@ -1,4 +1,4 @@
-package stringsvc
+package stringsvc_test
 
 import (
 	"net/http"
@@ -7,8 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-kit/kit/log"
+	"github.com/gnhuy91/stringsvc"
 
+	"github.com/go-kit/kit/log"
 	"golang.org/x/net/context"
 )
 
@@ -23,8 +24,8 @@ func TestHandlerUppercase(t *testing.T) {
 
 	ctx := context.Background()
 	logger := log.NewLogfmtLogger(os.Stderr)
-	s := NewStringService()
-	h := MakeHTTPHandler(ctx, s, logger)
+	s := stringsvc.NewStringService()
+	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
 
 	req, _ := http.NewRequest(method, url, strings.NewReader(reqBody))
 	rec := httptest.NewRecorder()
@@ -53,8 +54,8 @@ func TestHandlerCount(t *testing.T) {
 
 	ctx := context.Background()
 	logger := log.NewLogfmtLogger(os.Stderr)
-	s := NewStringService()
-	h := MakeHTTPHandler(ctx, s, logger)
+	s := stringsvc.NewStringService()
+	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
 
 	req, _ := http.NewRequest(method, url, strings.NewReader(reqBody))
 	rec := httptest.NewRecorder()
