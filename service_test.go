@@ -3,9 +3,9 @@ package stringsvc_test
 import (
 	"testing"
 
-	"github.com/gnhuy91/stringsvc"
-
 	"golang.org/x/net/context"
+
+	"github.com/gnhuy91/stringsvc"
 )
 
 func TestUppercase(t *testing.T) {

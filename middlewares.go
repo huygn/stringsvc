@@ -3,9 +3,8 @@ package stringsvc
 import (
 	"time"
 
-	"golang.org/x/net/context"
-
 	"github.com/go-kit/kit/log"
+	"golang.org/x/net/context"
 )
 
 // Middleware describes a service middleware.

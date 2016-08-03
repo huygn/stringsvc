@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gnhuy91/stringsvc"
-
 	"github.com/go-kit/kit/log"
 	"golang.org/x/net/context"
+
+	"github.com/gnhuy91/stringsvc"
 )
 
 func TestHandlerUppercase(t *testing.T) {
