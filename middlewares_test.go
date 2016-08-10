@@ -47,12 +47,14 @@ var (
 func TestLogMiddlewareUppercase(t *testing.T) {
 	ctx := context.Background()
 
-	var logBuf bytes.Buffer
-	logw := io.MultiWriter(&logBuf)
-	if debug {
-		logw = io.MultiWriter(logw, os.Stderr)
+	var buf bytes.Buffer
+	var logger log.Logger
+	{
+		logger = log.NewLogfmtLogger(&buf)
+		if debug {
+			logger = log.NewLogfmtLogger(io.MultiWriter(&buf, os.Stderr))
+		}
 	}
-	logger := log.NewLogfmtLogger(logw)
 
 	svc := &service{}
 	logSvc := stringsvc.LoggingMiddleware(logger)(svc)
@@ -62,18 +64,20 @@ func TestLogMiddlewareUppercase(t *testing.T) {
 	}
 	logSvc.Uppercase(ctx, "")
 
-	testLogFmt(t, logBuf, "uppercase")
+	testLogFmt(t, buf, "uppercase")
 }
 
 func TestLogMiddlewareCount(t *testing.T) {
 	ctx := context.Background()
 
-	var logBuf bytes.Buffer
-	logw := io.MultiWriter(&logBuf)
-	if debug {
-		logw = io.MultiWriter(logw, os.Stderr)
+	var buf bytes.Buffer
+	var logger log.Logger
+	{
+		logger = log.NewLogfmtLogger(&buf)
+		if debug {
+			logger = log.NewLogfmtLogger(io.MultiWriter(&buf, os.Stderr))
+		}
 	}
-	logger := log.NewLogfmtLogger(logw)
 
 	svc := &service{}
 	logSvc := stringsvc.LoggingMiddleware(logger)(svc)
@@ -83,7 +87,7 @@ func TestLogMiddlewareCount(t *testing.T) {
 	}
 	logSvc.Count(ctx, "")
 
-	testLogFmt(t, logBuf, "count")
+	testLogFmt(t, buf, "count")
 }
 
 func testLogFmt(t *testing.T, logOutput bytes.Buffer, method string) {
