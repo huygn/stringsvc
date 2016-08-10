@@ -42,7 +42,7 @@ func (mw loggingMiddleware) Uppercase(ctx context.Context, s string) (output str
 func (mw loggingMiddleware) Count(ctx context.Context, s string) (n int) {
 	defer func(begin time.Time) {
 		logfmt := logfmtStruct{
-			"uppercase",
+			"count",
 			s,
 			n,
 			nil,
