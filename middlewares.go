@@ -24,16 +24,26 @@ type loggingMiddleware struct {
 	next   Service
 }
 
+func (mw loggingMiddleware) Log(method string, input, output interface{}, err error, took time.Duration) error {
+	logfmt := logfmtStruct{
+		method,
+		input,
+		output,
+		err,
+		took,
+	}
+	return mw.logger.Log(logfmt.keyvals()...)
+}
+
 func (mw loggingMiddleware) Uppercase(ctx context.Context, s string) (output string, err error) {
 	defer func(begin time.Time) {
-		logfmt := logfmtStruct{
+		mw.Log(
 			"uppercase",
 			s,
 			output,
 			err,
 			time.Since(begin),
-		}
-		mw.logger.Log(logfmt.keyvals()...)
+		)
 	}(time.Now())
 
 	return mw.next.Uppercase(ctx, s)
@@ -41,14 +51,13 @@ func (mw loggingMiddleware) Uppercase(ctx context.Context, s string) (output str
 
 func (mw loggingMiddleware) Count(ctx context.Context, s string) (n int) {
 	defer func(begin time.Time) {
-		logfmt := logfmtStruct{
+		mw.Log(
 			"count",
 			s,
 			n,
 			nil,
 			time.Since(begin),
-		}
-		mw.logger.Log(logfmt.keyvals()...)
+		)
 	}(time.Now())
 
 	return mw.next.Count(ctx, s)
@@ -56,8 +65,8 @@ func (mw loggingMiddleware) Count(ctx context.Context, s string) (n int) {
 
 // logfmtStruct contains logfmt-style logging fields
 type logfmtStruct struct {
-	method, input string
-	output        interface{}
+	method        string
+	input, output interface{}
 	err           error
 	took          time.Duration
 }
