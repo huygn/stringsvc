@@ -36,7 +36,7 @@ var (
 	methodPrefix = `method=`
 )
 
-func TestLogFmtUppercase(t *testing.T) {
+func TestLogMiddlewareUppercase(t *testing.T) {
 	ctx := context.Background()
 
 	var logBuf bytes.Buffer
@@ -54,7 +54,7 @@ func TestLogFmtUppercase(t *testing.T) {
 	testLogFmt(t, logBuf, "uppercase")
 }
 
-func TestLogFmtCount(t *testing.T) {
+func TestLogMiddlewareCount(t *testing.T) {
 	ctx := context.Background()
 
 	var logBuf bytes.Buffer
