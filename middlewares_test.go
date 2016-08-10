@@ -56,13 +56,13 @@ func TestLogMiddlewareUppercase(t *testing.T) {
 		}
 	}
 
-	svc := &service{}
-	logSvc := stringsvc.LoggingMiddleware(logger)(svc)
-
-	svc.UppercaseF = func(ctx context.Context, s string) (string, error) {
-		return "", nil
+	svc := &service{
+		UppercaseF: func(ctx context.Context, s string) (string, error) {
+			return "", nil
+		},
 	}
-	logSvc.Uppercase(ctx, "")
+	logMw := stringsvc.LoggingMiddleware(logger)(svc)
+	logMw.Uppercase(ctx, "")
 
 	testLogFmt(t, buf, "uppercase")
 }
@@ -79,13 +79,13 @@ func TestLogMiddlewareCount(t *testing.T) {
 		}
 	}
 
-	svc := &service{}
-	logSvc := stringsvc.LoggingMiddleware(logger)(svc)
-
-	svc.CountF = func(ctx context.Context, s string) int {
-		return 0
+	svc := &service{
+		CountF: func(ctx context.Context, s string) int {
+			return 0
+		},
 	}
-	logSvc.Count(ctx, "")
+	logMw := stringsvc.LoggingMiddleware(logger)(svc)
+	logMw.Count(ctx, "")
 
 	testLogFmt(t, buf, "count")
 }
