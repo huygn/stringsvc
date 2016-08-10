@@ -2,6 +2,7 @@ package stringsvc_test
 
 import (
 	"bytes"
+	"flag"
 	"io"
 	"io/ioutil"
 	"os"
@@ -13,6 +14,13 @@ import (
 
 	"github.com/gnhuy91/stringsvc"
 )
+
+var debug bool
+
+func init() {
+	flag.BoolVar(&debug, "debug", false, "")
+	flag.Parse()
+}
 
 type service struct {
 	UppercaseF func(context.Context, string) (string, error)
@@ -40,8 +48,11 @@ func TestLogMiddlewareUppercase(t *testing.T) {
 	ctx := context.Background()
 
 	var logBuf bytes.Buffer
-	wr := io.MultiWriter(&logBuf, os.Stderr)
-	logger := log.NewLogfmtLogger(wr)
+	logw := io.MultiWriter(&logBuf)
+	if debug {
+		logw = io.MultiWriter(logw, os.Stderr)
+	}
+	logger := log.NewLogfmtLogger(logw)
 
 	svc := &service{}
 	logSvc := stringsvc.LoggingMiddleware(logger)(svc)
@@ -58,8 +69,11 @@ func TestLogMiddlewareCount(t *testing.T) {
 	ctx := context.Background()
 
 	var logBuf bytes.Buffer
-	wr := io.MultiWriter(&logBuf, os.Stderr)
-	logger := log.NewLogfmtLogger(wr)
+	logw := io.MultiWriter(&logBuf)
+	if debug {
+		logw = io.MultiWriter(logw, os.Stderr)
+	}
+	logger := log.NewLogfmtLogger(logw)
 
 	svc := &service{}
 	logSvc := stringsvc.LoggingMiddleware(logger)(svc)
