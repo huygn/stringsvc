@@ -28,7 +28,11 @@ func (svc *service) Count(ctx context.Context, s string) (n int) {
 }
 
 var (
-	logfmtRegex  = `^method=(\S+) input=("*[a-zA-Z0-9_ ]*"*) output=("*[a-zA-Z0-9_ ]*"*) err=("*[a-zA-Z0-9_ ]*"*) took=(\S+)$`
+	logfmtRegex = `^method=(\S+) ` +
+		`input=("*[a-zA-Z0-9_ ]*"*) ` +
+		`output=("*[a-zA-Z0-9_ ]*"*) ` +
+		`err=("*[a-zA-Z0-9_ ]*"*) ` +
+		`took=(\S+)$`
 	methodPrefix = `method=`
 )
 
