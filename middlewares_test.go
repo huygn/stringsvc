@@ -22,19 +22,6 @@ func init() {
 	flag.Parse()
 }
 
-type service struct {
-	UppercaseF func(context.Context, string) (string, error)
-	CountF     func(context.Context, string) int
-}
-
-func (svc *service) Uppercase(ctx context.Context, s string) (string, error) {
-	return svc.UppercaseF(ctx, s)
-}
-
-func (svc *service) Count(ctx context.Context, s string) (n int) {
-	return svc.CountF(ctx, s)
-}
-
 var (
 	logfmtRegex = `^method=(\S+) ` +
 		`input=("*[a-zA-Z0-9_ ]*"*) ` +
@@ -56,11 +43,7 @@ func TestLogMiddlewareUppercase(t *testing.T) {
 		}
 	}
 
-	svc := &service{
-		UppercaseF: func(ctx context.Context, s string) (string, error) {
-			return "", nil
-		},
-	}
+	svc := stringsvc.NewStringService()
 	logMw := stringsvc.LoggingMiddleware(logger)(svc)
 	logMw.Uppercase(ctx, "")
 
@@ -79,11 +62,7 @@ func TestLogMiddlewareCount(t *testing.T) {
 		}
 	}
 
-	svc := &service{
-		CountF: func(ctx context.Context, s string) int {
-			return 0
-		},
-	}
+	svc := stringsvc.NewStringService()
 	logMw := stringsvc.LoggingMiddleware(logger)(svc)
 	logMw.Count(ctx, "")
 
