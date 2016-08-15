@@ -25,14 +25,13 @@ type loggingMiddleware struct {
 }
 
 func (mw loggingMiddleware) Log(method string, input, output interface{}, err error, took time.Duration) error {
-	logfmt := logfmt{
-		method,
-		input,
-		output,
-		err,
-		took,
-	}
-	return mw.logger.Log(logfmt.keyvals()...)
+	return mw.logger.Log(
+		"method", method,
+		"input", input,
+		"output", output,
+		"err", err,
+		"took", took,
+	)
 }
 
 func (mw loggingMiddleware) Uppercase(ctx context.Context, s string) (output string, err error) {
@@ -61,23 +60,4 @@ func (mw loggingMiddleware) Count(ctx context.Context, s string) (n int) {
 	}(time.Now())
 
 	return mw.next.Count(ctx, s)
-}
-
-// logfmt contains logfmt-style logging fields
-type logfmt struct {
-	method        string
-	input, output interface{}
-	err           error
-	took          time.Duration
-}
-
-// keyvals return key-val pairs to feed to go-kit/log.Logger.Log() method
-func (f *logfmt) keyvals() []interface{} {
-	return []interface{}{
-		"method", f.method,
-		"input", f.input,
-		"output", f.output,
-		"err", f.err,
-		"took", f.took,
-	}
 }
