@@ -36,8 +36,6 @@ func TestLogMiddlewareUppercase(t *testing.T) {
 		output: `method=uppercase input="hello, world" output="HELLO, WORLD" err=null`,
 	}
 
-	ctx := context.Background()
-
 	var buf bytes.Buffer
 	var logger log.Logger
 	{
@@ -49,6 +47,7 @@ func TestLogMiddlewareUppercase(t *testing.T) {
 
 	svc := stringsvc.NewStringService()
 	logMw := stringsvc.LoggingMiddleware(logger)(svc)
+	ctx := context.Background()
 	logMw.Uppercase(ctx, tc.input)
 
 	testLogFmt(t, buf, tc.output)
@@ -62,8 +61,6 @@ func TestLogMiddlewareCount(t *testing.T) {
 		output: `method=count input="hello, world" output=12 err=null`,
 	}
 
-	ctx := context.Background()
-
 	var buf bytes.Buffer
 	var logger log.Logger
 	{
@@ -75,6 +72,7 @@ func TestLogMiddlewareCount(t *testing.T) {
 
 	svc := stringsvc.NewStringService()
 	logMw := stringsvc.LoggingMiddleware(logger)(svc)
+	ctx := context.Background()
 	logMw.Count(ctx, tc.input)
 
 	testLogFmt(t, buf, tc.output)
