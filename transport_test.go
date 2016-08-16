@@ -13,62 +13,47 @@ import (
 	"github.com/gnhuy91/stringsvc"
 )
 
-func TestHandlerUppercase(t *testing.T) {
-	const (
-		url    = "/uppercase"
-		method = "POST"
-		code   = http.StatusOK
-	)
-	reqBody := `{"s":"hello, world"}`
-	expectedResp := `{"v":"HELLO, WORLD"}`
-
-	ctx := context.Background()
-	logger := log.NewLogfmtLogger(os.Stderr)
-	s := stringsvc.NewStringService()
-	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
-
-	req, _ := http.NewRequest(method, url, strings.NewReader(reqBody))
-	rec := httptest.NewRecorder()
-
-	h.ServeHTTP(rec, req)
-	errMsg := "%s %s, body: %s - want %v, got %v"
-
-	if rec.Code != code {
-		t.Errorf(errMsg, method, url, reqBody, code, rec.Code)
+func TestHandler(t *testing.T) {
+	cases := []struct {
+		method, url               string
+		code                      int
+		reqBody, expectedRespBody string
+	}{
+		{
+			method:           "POST",
+			url:              "/uppercase",
+			code:             http.StatusOK,
+			reqBody:          `{"s":"hello, world"}`,
+			expectedRespBody: `{"v":"HELLO, WORLD"}`,
+		},
+		{
+			method:           "POST",
+			url:              "/count",
+			code:             http.StatusOK,
+			reqBody:          `{"s":"hello, world"}`,
+			expectedRespBody: `{"v":12}`,
+		},
 	}
 
-	respBody := strings.TrimSpace(rec.Body.String())
-	if respBody != expectedResp {
-		t.Errorf(errMsg, method, url, reqBody, expectedResp, respBody)
-	}
-}
+	for _, c := range cases {
+		ctx := context.Background()
+		logger := log.NewLogfmtLogger(os.Stderr)
+		s := stringsvc.NewStringService()
+		h := stringsvc.MakeHTTPHandler(ctx, s, logger)
 
-func TestHandlerCount(t *testing.T) {
-	const (
-		url    = "/count"
-		method = "POST"
-		code   = http.StatusOK
-	)
-	reqBody := `{"s":"hello, world"}`
-	expectedResp := `{"v":12}`
+		req, _ := http.NewRequest(c.method, c.url, strings.NewReader(c.reqBody))
+		rec := httptest.NewRecorder()
 
-	ctx := context.Background()
-	logger := log.NewLogfmtLogger(os.Stderr)
-	s := stringsvc.NewStringService()
-	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
+		h.ServeHTTP(rec, req)
+		errMsg := "%s %s, body: %s - want %v, got %v"
 
-	req, _ := http.NewRequest(method, url, strings.NewReader(reqBody))
-	rec := httptest.NewRecorder()
+		if rec.Code != c.code {
+			t.Errorf(errMsg, c.method, c.url, c.reqBody, c.code, rec.Code)
+		}
 
-	h.ServeHTTP(rec, req)
-	errMsg := "%s %s, body: %s - want %v, got %v"
-
-	if rec.Code != code {
-		t.Errorf(errMsg, method, url, reqBody, code, rec.Code)
-	}
-
-	respBody := strings.TrimSpace(rec.Body.String())
-	if respBody != expectedResp {
-		t.Errorf(errMsg, method, url, reqBody, expectedResp, respBody)
+		respBody := strings.TrimSpace(rec.Body.String())
+		if respBody != c.expectedRespBody {
+			t.Errorf(errMsg, c.method, c.url, c.reqBody, c.expectedRespBody, respBody)
+		}
 	}
 }
