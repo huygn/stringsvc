@@ -15,23 +15,24 @@ import (
 
 func TestHandler(t *testing.T) {
 	cases := []struct {
-		method, url               string
-		code                      int
-		reqBody, expectedRespBody string
+		method, url      string
+		reqBody          string
+		expectedRespBody string
+		expectedRespCode int
 	}{
 		{
 			method:           "POST",
 			url:              "/uppercase",
-			code:             http.StatusOK,
 			reqBody:          `{"s":"hello, world"}`,
 			expectedRespBody: `{"v":"HELLO, WORLD"}`,
+			expectedRespCode: http.StatusOK,
 		},
 		{
 			method:           "POST",
 			url:              "/count",
-			code:             http.StatusOK,
 			reqBody:          `{"s":"hello, world"}`,
 			expectedRespBody: `{"v":12}`,
+			expectedRespCode: http.StatusOK,
 		},
 	}
 
@@ -47,8 +48,8 @@ func TestHandler(t *testing.T) {
 		h.ServeHTTP(rec, req)
 		errMsg := "%s %s, body: %s - want %v, got %v"
 
-		if rec.Code != c.code {
-			t.Errorf(errMsg, c.method, c.url, c.reqBody, c.code, rec.Code)
+		if rec.Code != c.expectedRespCode {
+			t.Errorf(errMsg, c.method, c.url, c.reqBody, c.expectedRespCode, rec.Code)
 		}
 
 		respBody := strings.TrimSpace(rec.Body.String())
