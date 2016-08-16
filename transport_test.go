@@ -29,6 +29,13 @@ func TestHandler(t *testing.T) {
 		},
 		{
 			method:           "POST",
+			url:              "/uppercase",
+			reqBody:          `{"s":""}`,
+			expectedRespBody: `{"v":"","err":"Empty string"}`,
+			expectedRespCode: http.StatusOK,
+		},
+		{
+			method:           "POST",
 			url:              "/count",
 			reqBody:          `{"s":"hello, world"}`,
 			expectedRespBody: `{"v":12}`,
