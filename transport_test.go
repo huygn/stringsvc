@@ -15,28 +15,28 @@ import (
 
 func TestHandler(t *testing.T) {
 	cases := []struct {
-		method, url      string
+		method, route    string
 		reqBody          string
 		expectedRespBody string
 		expectedRespCode int
 	}{
 		{
 			method:           "POST",
-			url:              "/uppercase",
+			route:            "/uppercase",
 			reqBody:          `{"s":"hello, world"}`,
 			expectedRespBody: `{"v":"HELLO, WORLD"}`,
 			expectedRespCode: http.StatusOK,
 		},
 		{
 			method:           "POST",
-			url:              "/uppercase",
+			route:            "/uppercase",
 			reqBody:          `{"s":""}`,
 			expectedRespBody: `{"v":"","err":"Empty string"}`,
 			expectedRespCode: http.StatusOK,
 		},
 		{
 			method:           "POST",
-			url:              "/count",
+			route:            "/count",
 			reqBody:          `{"s":"hello, world"}`,
 			expectedRespBody: `{"v":12}`,
 			expectedRespCode: http.StatusOK,
@@ -49,19 +49,19 @@ func TestHandler(t *testing.T) {
 	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
 
 	for _, c := range cases {
-		req, _ := http.NewRequest(c.method, c.url, strings.NewReader(c.reqBody))
+		req, _ := http.NewRequest(c.method, c.route, strings.NewReader(c.reqBody))
 		rec := httptest.NewRecorder()
 		h.ServeHTTP(rec, req)
 
 		errMsg := "%s %s, body: %s - want %v, got %v"
 
 		if rec.Code != c.expectedRespCode {
-			t.Errorf(errMsg, c.method, c.url, c.reqBody, c.expectedRespCode, rec.Code)
+			t.Errorf(errMsg, c.method, c.route, c.reqBody, c.expectedRespCode, rec.Code)
 		}
 
 		respBody := strings.TrimSpace(rec.Body.String())
 		if respBody != c.expectedRespBody {
-			t.Errorf(errMsg, c.method, c.url, c.reqBody, c.expectedRespBody, respBody)
+			t.Errorf(errMsg, c.method, c.route, c.reqBody, c.expectedRespBody, respBody)
 		}
 	}
 }
