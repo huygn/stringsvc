@@ -43,16 +43,16 @@ func TestHandler(t *testing.T) {
 		},
 	}
 
-	for _, c := range cases {
-		ctx := context.Background()
-		logger := log.NewLogfmtLogger(os.Stderr)
-		s := stringsvc.NewStringService()
-		h := stringsvc.MakeHTTPHandler(ctx, s, logger)
+	ctx := context.Background()
+	logger := log.NewLogfmtLogger(os.Stderr)
+	s := stringsvc.NewStringService()
+	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
 
+	for _, c := range cases {
 		req, _ := http.NewRequest(c.method, c.url, strings.NewReader(c.reqBody))
 		rec := httptest.NewRecorder()
-
 		h.ServeHTTP(rec, req)
+
 		errMsg := "%s %s, body: %s - want %v, got %v"
 
 		if rec.Code != c.expectedRespCode {
