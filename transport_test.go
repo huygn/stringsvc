@@ -13,7 +13,7 @@ import (
 	"github.com/gnhuy91/stringsvc"
 )
 
-func TestHandler(t *testing.T) {
+func TestHandlers(t *testing.T) {
 	cases := []struct {
 		method, route    string
 		reqBody          string
