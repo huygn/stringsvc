@@ -22,12 +22,6 @@ func init() {
 	flag.Parse()
 }
 
-var logfmtRegex = `^method=(\S+) ` +
-	`input=("*.*"*) ` +
-	`output=("*.*"*) ` +
-	`err=("*.*"*) ` +
-	`took=(\S+)$`
-
 func TestLogMiddlewareUppercase(t *testing.T) {
 	tc := struct {
 		input, output string
@@ -79,18 +73,29 @@ func TestLogMiddlewareCount(t *testing.T) {
 }
 
 func testLogFmt(t *testing.T, logOutput bytes.Buffer, prefix string) {
+	const logfmtRegex = `^method=(\S+) ` +
+		`input=("*.*"*) ` +
+		`output=("*.*"*) ` +
+		`err=("*.*"*) ` +
+		`took=(\S+)$`
+
+	// read log output from buffer
 	b, err := ioutil.ReadAll(&logOutput)
 	if err != nil {
 		t.Error(err)
 	}
-	b = bytes.TrimSpace(b)
-	match, err := regexp.Match(logfmtRegex, b)
+
+	// match log output with regex
+	match, err := regexp.Match(logfmtRegex, bytes.TrimSpace(b))
 	if err != nil {
 		t.Error(err)
 	}
 	if !match {
 		t.Errorf("log output does not match regex %s, ouput %s", logfmtRegex, b)
 	}
+
+	// check if log output is correct, except for `took=...`
+	// since we don't know the exact time our sever serve the request.
 	p := []byte(prefix)
 	if !bytes.HasPrefix(b, p) {
 		t.Errorf("log output method does not match, want prefix %q, got %q", p, b)
