@@ -23,37 +23,48 @@ func init() {
 }
 
 func TestLogMiddlewareUppercase(t *testing.T) {
-	tc := struct {
-		input, output string
+	cases := []struct {
+		in, out string
 	}{
-		input:  `hello, world`,
-		output: `method=uppercase input="hello, world" output="HELLO, WORLD" err=null`,
-	}
-
-	var buf bytes.Buffer
-	var logger log.Logger
-	{
-		logger = log.NewLogfmtLogger(&buf)
-		if debug {
-			logger = log.NewLogfmtLogger(io.MultiWriter(&buf, os.Stderr))
-		}
+		{
+			in:  `hello, world`,
+			out: `method=uppercase input="hello, world" output="HELLO, WORLD" err=null`,
+		},
+		{
+			in:  ``,
+			out: `method=uppercase input= output= err="Empty string"`,
+		},
 	}
 
 	svc := stringsvc.NewStringService()
-	logMw := stringsvc.LoggingMiddleware(logger)(svc)
 	ctx := context.Background()
-	logMw.Uppercase(ctx, tc.input)
 
-	testLogFmt(t, buf, tc.output)
+	for _, c := range cases {
+		var buf bytes.Buffer
+		var logger log.Logger
+		{
+			logger = log.NewLogfmtLogger(&buf)
+			if debug {
+				logger = log.NewLogfmtLogger(io.MultiWriter(&buf, os.Stderr))
+			}
+		}
+
+		logMw := stringsvc.LoggingMiddleware(logger)(svc)
+		logMw.Uppercase(ctx, c.in)
+		testLogFmt(t, buf, c.out)
+	}
 }
 
 func TestLogMiddlewareCount(t *testing.T) {
-	tc := struct {
-		input, output string
+	c := struct {
+		in, out string
 	}{
-		input:  `hello, world`,
-		output: `method=count input="hello, world" output=12 err=null`,
+		in:  `hello, world`,
+		out: `method=count input="hello, world" output=12 err=null`,
 	}
+
+	svc := stringsvc.NewStringService()
+	ctx := context.Background()
 
 	var buf bytes.Buffer
 	var logger log.Logger
@@ -64,12 +75,9 @@ func TestLogMiddlewareCount(t *testing.T) {
 		}
 	}
 
-	svc := stringsvc.NewStringService()
 	logMw := stringsvc.LoggingMiddleware(logger)(svc)
-	ctx := context.Background()
-	logMw.Count(ctx, tc.input)
-
-	testLogFmt(t, buf, tc.output)
+	logMw.Count(ctx, c.in)
+	testLogFmt(t, buf, c.out)
 }
 
 func testLogFmt(t *testing.T, logOutput bytes.Buffer, prefix string) {
