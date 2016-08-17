@@ -15,6 +15,10 @@ import (
 	"github.com/gnhuy91/stringsvc"
 )
 
+// For showing log output to Stderr during test.
+// Usage:
+//    go test -v -debug
+//
 var debug bool
 
 func init() {
