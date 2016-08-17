@@ -4,6 +4,7 @@ import:
   subpackages:
   - endpoint
   - transport/http
+  - log
 - package: golang.org/x/net
   subpackages:
   - context

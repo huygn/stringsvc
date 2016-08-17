@@ -1,8 +1,8 @@
-hash: fcb5af97ee385e69d61f920bab7ffe10afc85db4f87ab82d4281df49402500fb
-updated: 2016-07-19T11:41:02.407363291+07:00
+hash: 5bd7db417b8af1450bf00b006013cd79ef2262ba973d5337e84d2f00018c3344
+updated: 2016-08-17T09:50:12.978695122+07:00
 imports:
 - name: github.com/go-kit/kit
-  version: f8893abd5ac91b5f70ada8df8a1e60f6a31142f5
+  version: 9cd0b936ad642d7ae893adfb6357cc24bce41e64
   subpackages:
   - endpoint
   - transport/http
@@ -12,13 +12,13 @@ imports:
 - name: github.com/go-stack/stack
   version: 100eb0c0a9c5b306ca2fb4f165df21d80ada4b82
 - name: github.com/gorilla/context
-  version: aed02d124ae4a0e94fea4541c8effd05bf0c8296
+  version: 01ef6ff48fdcdcb29ae84f90f10f33dac24845a0
 - name: github.com/gorilla/mux
   version: 0eeaf8392f5b04950925b8a69fe70f110fa7cbfc
 - name: github.com/kr/logfmt
   version: b84e30acd515aadc4b783ad4ff83aff3299bdfe0
 - name: golang.org/x/net
-  version: 3797cd8864994d713d909eda5e61ede8683fdc12
+  version: 07b51741c1d6423d4a6abab1c49940ec09cb1aaf
   subpackages:
   - context
   - context/ctxhttp
