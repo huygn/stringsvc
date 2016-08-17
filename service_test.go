@@ -9,48 +9,50 @@ import (
 )
 
 func TestUppercase(t *testing.T) {
-	const (
-		inp  = "hello, world"
-		outp = "HELLO, WORLD"
-	)
+	cases := []struct {
+		in, out string
+		err     error
+	}{
+		{
+			in:  "hello, world",
+			out: "HELLO, WORLD",
+			err: nil,
+		},
+		{
+			in:  "",
+			out: "",
+			err: stringsvc.ErrEmpty,
+		},
+	}
 
 	ctx := context.Background()
 	svc := stringsvc.NewStringService()
 
-	s, err := svc.Uppercase(ctx, inp)
-	if err != nil {
-		t.Errorf(err.Error())
-	}
-	if s != outp {
-		t.Errorf("input: %q, want %q, got %q", inp, outp, s)
-	}
-}
-
-func TestUppercase_FailIfInputNil(t *testing.T) {
-	const (
-		inp = ""
-	)
-
-	ctx := context.Background()
-	svc := stringsvc.NewStringService()
-
-	_, err := svc.Uppercase(ctx, inp)
-	if err != stringsvc.ErrEmpty {
-		t.Errorf("input: %q, want %q, got %q", inp, stringsvc.ErrEmpty, err)
+	for _, c := range cases {
+		s, err := svc.Uppercase(ctx, c.in)
+		if err != c.err {
+			t.Errorf("input: %q, want %v, got %v", c.in, c.err, err)
+		}
+		if s != c.out {
+			t.Errorf("input: %q, want %q, got %q", c.in, c.out, s)
+		}
 	}
 }
 
 func TestCount(t *testing.T) {
-	const (
-		inp  = "hello, world"
-		outp = 12
-	)
+	c := struct {
+		in  string
+		out int
+	}{
+		in:  "hello, world",
+		out: 12,
+	}
 
 	ctx := context.Background()
 	svc := stringsvc.NewStringService()
 
-	n := svc.Count(ctx, inp)
-	if n != outp {
-		t.Errorf("input: %q, want %v, got %v", inp, outp, n)
+	n := svc.Count(ctx, c.in)
+	if n != c.out {
+		t.Errorf("input: %q, want %v, got %v", c.in, c.out, n)
 	}
 }
