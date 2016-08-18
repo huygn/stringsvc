@@ -1,6 +1,7 @@
 package stringsvc_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -49,19 +50,23 @@ func TestHandlers(t *testing.T) {
 	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
 
 	for _, c := range cases {
-		req, _ := http.NewRequest(c.method, c.route, strings.NewReader(c.reqBody))
-		rec := httptest.NewRecorder()
-		h.ServeHTTP(rec, req)
+		t.Run(
+			fmt.Sprintf("route=%q,method=%q,body=%s", c.route, c.method, c.reqBody),
+			func(t *testing.T) {
+				req, _ := http.NewRequest(c.method, c.route, strings.NewReader(c.reqBody))
+				rec := httptest.NewRecorder()
+				h.ServeHTTP(rec, req)
 
-		errMsg := "%s %s, body: %s - want %v, got %v"
+				errMsg := "%s %s, body: %s - want %v, got %v"
 
-		if rec.Code != c.expectedRespCode {
-			t.Errorf(errMsg, c.method, c.route, c.reqBody, c.expectedRespCode, rec.Code)
-		}
+				if rec.Code != c.expectedRespCode {
+					t.Errorf(errMsg, c.method, c.route, c.reqBody, c.expectedRespCode, rec.Code)
+				}
 
-		respBody := strings.TrimSpace(rec.Body.String())
-		if respBody != c.expectedRespBody {
-			t.Errorf(errMsg, c.method, c.route, c.reqBody, c.expectedRespBody, respBody)
-		}
+				respBody := strings.TrimSpace(rec.Body.String())
+				if respBody != c.expectedRespBody {
+					t.Errorf(errMsg, c.method, c.route, c.reqBody, c.expectedRespBody, respBody)
+				}
+			})
 	}
 }

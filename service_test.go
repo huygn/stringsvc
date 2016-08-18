@@ -1,6 +1,7 @@
 package stringsvc_test
 
 import (
+	"fmt"
 	"testing"
 
 	"golang.org/x/net/context"
@@ -29,13 +30,15 @@ func TestUppercase(t *testing.T) {
 	svc := stringsvc.NewStringService()
 
 	for _, c := range cases {
-		s, err := svc.Uppercase(ctx, c.in)
-		if err != c.err {
-			t.Errorf("input: %q, want %v, got %v", c.in, c.err, err)
-		}
-		if s != c.out {
-			t.Errorf("input: %q, want %q, got %q", c.in, c.out, s)
-		}
+		t.Run(fmt.Sprintf("in=%q", c.in), func(t *testing.T) {
+			s, err := svc.Uppercase(ctx, c.in)
+			if err != c.err {
+				t.Errorf("input: %q, want %v, got %v", c.in, c.err, err)
+			}
+			if s != c.out {
+				t.Errorf("input: %q, want %q, got %q", c.in, c.out, s)
+			}
+		})
 	}
 }
 
