@@ -2,7 +2,7 @@ version: '2'
 services:
 
   go: &go
-    image: golang
+    image: golang:1.7
     working_dir: /go/src/github.com/gnhuy91/stringsvc
     volumes:
       - .:/go/src/github.com/gnhuy91/stringsvc
