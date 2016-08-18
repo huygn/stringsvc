@@ -3,6 +3,7 @@ package stringsvc_test
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -44,18 +45,20 @@ func TestLogMiddlewareUppercase(t *testing.T) {
 	ctx := context.Background()
 
 	for _, c := range cases {
-		var buf bytes.Buffer
-		var logger log.Logger
-		{
-			logger = log.NewLogfmtLogger(&buf)
-			if debug {
-				logger = log.NewLogfmtLogger(io.MultiWriter(&buf, os.Stderr))
+		t.Run(fmt.Sprintf("in=%q", c.in), func(t *testing.T) {
+			var buf bytes.Buffer
+			var logger log.Logger
+			{
+				logger = log.NewLogfmtLogger(&buf)
+				if debug {
+					logger = log.NewLogfmtLogger(io.MultiWriter(&buf, os.Stderr))
+				}
 			}
-		}
 
-		logMw := stringsvc.LoggingMiddleware(logger)(svc)
-		logMw.Uppercase(ctx, c.in)
-		testLogFmt(t, buf, c.out)
+			logMw := stringsvc.LoggingMiddleware(logger)(svc)
+			logMw.Uppercase(ctx, c.in)
+			testLogFmt(t, buf, c.out)
+		})
 	}
 }
 
