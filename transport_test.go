@@ -2,6 +2,7 @@ package stringsvc_test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -66,6 +67,54 @@ func TestHandlers(t *testing.T) {
 				respBody := strings.TrimSpace(rec.Body.String())
 				if respBody != c.expectedRespBody {
 					t.Errorf(errMsg, c.method, c.route, c.reqBody, c.expectedRespBody, respBody)
+				}
+			})
+	}
+}
+
+func BenchmarkHandlers(b *testing.B) {
+	cases := []struct {
+		method, route string
+		reqBody       string
+	}{
+		{
+			method:  "POST",
+			route:   "/uppercase",
+			reqBody: `{"s":"hello, world"}`,
+		},
+		{
+			method:  "POST",
+			route:   "/uppercase",
+			reqBody: `{"s":""}`,
+		},
+		{
+			method:  "POST",
+			route:   "/count",
+			reqBody: `{"s":"hello, world"}`,
+		},
+	}
+
+	ctx := context.Background()
+
+	// Discard log output
+	logger := log.NewLogfmtLogger(log.NewSyncWriter(ioutil.Discard))
+
+	var s stringsvc.Service
+	{
+		s = stringsvc.NewStringService()
+		s = stringsvc.LoggingMiddleware(logger)(s)
+	}
+
+	h := stringsvc.MakeHTTPHandler(ctx, s, logger)
+	rec := httptest.NewRecorder()
+
+	for _, c := range cases {
+		b.Run(
+			fmt.Sprintf("route=%q,method=%q,body=%s", c.route, c.method, c.reqBody),
+			func(b *testing.B) {
+				for n := 0; n < b.N; n++ {
+					req, _ := http.NewRequest(c.method, c.route, strings.NewReader(c.reqBody))
+					h.ServeHTTP(rec, req)
 				}
 			})
 	}
