@@ -11,6 +11,10 @@ services:
     <<: *go
     command: go test -v
 
+  go-bench:
+    <<: *go
+    command: go test -run=xxx -bench=.
+
   go-build:
     <<: *go
     command: sh -c 'cd cmd/stringsvc && rm -f bin/stringsvc && go build -o bin/stringsvc && chmod 777 bin/stringsvc'

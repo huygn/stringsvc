@@ -21,3 +21,9 @@ make build
 ```console
 make run
 ```
+
+- Benchmark
+
+```console
+make bench
+```

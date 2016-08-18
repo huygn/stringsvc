@@ -11,6 +11,9 @@ clean:
 test:
 	$(DCR) go-test
 
+bench:
+	$(DCR) go-bench
+
 build:
 	$(DCR) go-build
 
