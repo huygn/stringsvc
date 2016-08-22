@@ -50,7 +50,6 @@ func TestCountEnpoint(t *testing.T) {
 		in  string
 		out int
 	}{
-
 		in:  "hello, world",
 		out: 12,
 	}
