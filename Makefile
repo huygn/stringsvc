@@ -17,10 +17,8 @@ bench:
 build:
 	$(DCR) go-build
 
-_run:
+run: build
 	cmd/stringsvc/bin/stringsvc
-
-run: build _run
 
 release: test build docker-build docker-push
 
